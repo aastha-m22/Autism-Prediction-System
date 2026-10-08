@@ -1,0 +1,16 @@
+{
+  "_readme": "PLACEHOLDER WORDING. Copy this file to questions.json and replace each line with the matching item from the official AQ-10 Adult questionnaire (Autism Research Centre, Cambridge), in the same order. Then set official to true. Keep the order: the scoring key in screening.py depends on it.",
+  "official": false,
+  "questions": [
+    "[Item 1 placeholder] About noticing small sounds that other people miss",
+    "[Item 2 placeholder] About focusing on the whole picture rather than small details",
+    "[Item 3 placeholder] About doing more than one thing at once",
+    "[Item 4 placeholder] About getting back to a task quickly after an interruption",
+    "[Item 5 placeholder] About reading between the lines when someone is talking",
+    "[Item 6 placeholder] About telling whether a listener is getting bored",
+    "[Item 7 placeholder] About working out characters' intentions when reading a story",
+    "[Item 8 placeholder] About collecting information about categories of things",
+    "[Item 9 placeholder] About working out thoughts or feelings from someone's face",
+    "[Item 10 placeholder] About working out people's intentions"
+  ]
+}

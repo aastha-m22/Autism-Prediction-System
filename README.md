@@ -13,7 +13,7 @@ Machine-learning models that flag who should be referred for a full autism asses
   - **Random Forest**
 - Picks the model with the best PR-AUC and evaluates it once on a held-out 20% test set.
 - Reports ASD-class **recall** (share of real cases caught), precision, F1, ROC-AUC and PR-AUC, and saves plots.
-- `predict.py` scores a new person's answers from the command line.
+- `predict.py` scores a new person's answers from the command line, and `app.py` is a web app for public use.
 
 All preprocessing (imputation, scaling, one-hot encoding) sits inside scikit-learn `Pipeline`s, so it is fitted on training folds only and nothing leaks from the test data.
 
@@ -109,6 +109,45 @@ jupyter notebook Autism_Prediction.ipynb
 
 The notebook covers the same pipeline with EDA and inline plots. It uses `autism_model.py`, so it always matches the scripts. In Google Colab, uncomment the setup cell at the top.
 
+## Web app
+
+`app.py` is a Streamlit web app anyone can use to take the AQ-10 and get their score, an explanation, and next steps (including where to get an assessment in India). It uses the questionnaire's own scoring rule, not the ML model, because the rule caught more real cases in the results below.
+
+- No answers are stored, sent or shared. They exist only in the browser session.
+- Adults (16+) only, with a consent step and clear "screening, not diagnosis" wording.
+
+### Add the official questions (required before sharing)
+
+The repo ships with placeholder wording in `questions.example.json`. Before you share the app:
+
+1. Download the official **AQ-10 (Adult)** from the Autism Research Centre (autismresearchcentre.com → Tests) and check its terms of use.
+2. Copy `questions.example.json` to `questions.json`.
+3. Replace each placeholder with the official item text, **keeping the same order** (the scoring key depends on it).
+4. Change `"official": false` to `"official": true`. The "Draft mode" banner disappears.
+
+### Run it locally
+
+```bash
+streamlit run app.py
+```
+
+It opens at http://localhost:8501.
+
+### Put it online (free)
+
+1. Push the repo, including `questions.json`, to GitHub.
+2. Go to share.streamlit.io and sign in with GitHub.
+3. Click **Create app**, choose this repo, branch `main`, main file `app.py`, and pick a URL.
+4. Click **Deploy**. After a few minutes you get a public link to share.
+
+Every push to `main` redeploys the app automatically.
+
+### Tests
+
+```bash
+pytest -q
+```
+
 ## Results
 
 Trained on the Kaggle `train.csv` (800 people, 161 with ASD). Model comparison uses 5-fold cross-validation on the 640-row training split.
@@ -152,7 +191,11 @@ On the held-out test set (160 people, 32 with ASD):
 ```
 autism_model.py          data cleaning, features, models, CV helper (shared)
 train.py                 train, compare, evaluate, save model + plots
-predict.py               score one person's answers
+predict.py               score one person's answers (command line)
+app.py                   Streamlit web app for public use
+screening.py             AQ-10 scoring used by the app
+questions.example.json   placeholder question wording (copy to questions.json)
+tests/                   scoring tests
 Autism_Prediction.ipynb  walkthrough notebook with EDA
 data/                    put Kaggle train.csv here (git-ignored)
 ```
@@ -162,4 +205,4 @@ data/                    put Kaggle train.csv here (git-ignored)
 - Lower the model's decision threshold so it catches at least as many cases as the AQ-10 rule, then compare false alarms at equal recall.
 - Calibrate probabilities.
 - Validate on real (non-synthetic) screening data.
-- Add a simple web front-end (Streamlit).
+- Usability testing of the web app with real users, and expert review of the results page.
