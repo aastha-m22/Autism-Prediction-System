@@ -1,0 +1,23 @@
+{
+  "model": "Random Forest",
+  "with_demographics": false,
+  "accuracy": 0.80625,
+  "asd_recall": 0.75,
+  "asd_precision": 0.5106382978723404,
+  "asd_f1": 0.6075949367088608,
+  "roc_auc": 0.89501953125,
+  "pr_auc": 0.5968690011529918,
+  "confusion_matrix": [
+    [
+      105,
+      23
+    ],
+    [
+      8,
+      24
+    ]
+  ],
+  "baseline_rule_test": {
+    "asd_recall": 0.9375
+  }
+}

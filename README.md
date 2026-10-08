@@ -111,13 +111,31 @@ The notebook covers the same pipeline with EDA and inline plots. It uses `autism
 
 ## Results
 
-Run `python train.py` and fill this in from `outputs/cv_results.csv` and `outputs/test_metrics.json`.
+Trained on the Kaggle `train.csv` (800 people, 161 with ASD). Model comparison uses 5-fold cross-validation on the 640-row training split.
 
-| Model | CV recall (ASD) | CV precision | CV PR-AUC |
+| Model | CV recall (ASD) | CV precision (ASD) | CV ROC-AUC | CV PR-AUC |
+|---|---|---|---|---|
+| AQ-10 rule (total ≥ 6) | **0.95** | 0.48 | 0.92 | 0.67 |
+| Logistic Regression | 0.86 | 0.55 | 0.91 | 0.66 |
+| Random Forest | 0.78 | **0.58** | 0.92 | **0.71** |
+
+On the held-out test set (160 people, 32 with ASD):
+
+| | Real ASD cases caught | Missed | False alarms |
 |---|---|---|---|
-| AQ-10 rule (total ≥ 6) | | | |
-| Logistic Regression | | | |
-| Random Forest | | | |
+| AQ-10 rule (total ≥ 6) | 30 / 32 (94%) | 2 | 38 |
+| Random Forest | 24 / 32 (75%) | 8 | 23 |
+
+![Confusion matrix](outputs/confusion_matrix.png)
+![Precision-recall and ROC curves](outputs/pr_roc_curves.png)
+![Feature importance](outputs/feature_importance.png)
+
+### What this shows
+
+- **The questionnaire does almost all of the work.** Adding age, gender, jaundice, family history and so on lifts PR-AUC only from 0.67 to 0.71, and ROC-AUC is the same (0.92).
+- **For screening, the plain AQ-10 cut-off is still the safer choice.** It catches 94% of real cases, against 75% for the Random Forest at its default threshold. The model gives fewer false alarms, but in a screener a missed case is the costlier mistake.
+- **The most informative items are A6 and A9**, which ask about noticing when a listener is bored and reading feelings from faces.
+- Adding ethnicity and country of residence nudges PR-AUC up slightly (0.73). It isn't used by default, because a screening tool shouldn't change its answer based on someone's ethnicity or country.
 
 ## What changed from the first version
 
@@ -141,7 +159,7 @@ data/                    put Kaggle train.csv here (git-ignored)
 
 ## Future work
 
-- Choose the decision threshold for a target recall (for example, catch at least 90% of cases).
+- Lower the model's decision threshold so it catches at least as many cases as the AQ-10 rule, then compare false alarms at equal recall.
 - Calibrate probabilities.
 - Validate on real (non-synthetic) screening data.
 - Add a simple web front-end (Streamlit).
