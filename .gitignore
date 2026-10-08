@@ -1,0 +1,7 @@
+# Dataset: download from Kaggle, don't commit it
+data/*.csv
+# Trained models are rebuilt by train.py
+models/
+__pycache__/
+.ipynb_checkpoints/
+.venv/
